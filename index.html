@@ -31,7 +31,9 @@
       --font-sans: "Rubik", sans-serif;
     }
   </style>
-  <body class="text-(--text) font-(--font-sans)">
+  <body
+    class="min-h-screen bg-linear-[180deg,_#807ECE_0%,_#8E7ECE_100%] text-(--text) font-(--font-sans)"
+  >
     <div id="root"></div>
 
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
@@ -135,24 +137,24 @@
               </div>
               <div className="flex gap-3">
                 <Button className="w-16 h-16">7</Button>
-                <Button className="flex-1 h-16">8</Button>
-                <Button className="flex-1 h-16">9</Button>
+                <Button className="w-16 h-16">8</Button>
+                <Button className="w-16 h-16">9</Button>
                 <Button className="w-16 h-16" variant="primary">
                   x
                 </Button>
               </div>
               <div className="flex gap-3">
                 <Button className="w-16 h-16">4</Button>
-                <Button className="flex-1 h-16">5</Button>
-                <Button className="flex-1 h-16">6</Button>
+                <Button className="w-16 h-16">5</Button>
+                <Button className="w-16 h-16">6</Button>
                 <Button className="w-16 h-16" variant="primary">
                   -
                 </Button>
               </div>
               <div className="flex gap-3">
                 <Button className="w-16 h-16">1</Button>
-                <Button className="flex-1 h-16">2</Button>
-                <Button className="flex-1 h-16">3</Button>
+                <Button className="w-16 h-16">2</Button>
+                <Button className="w-16 h-16">3</Button>
                 <Button className="w-16 h-16" variant="primary">
                   +
                 </Button>
@@ -169,10 +171,35 @@
         );
       }
 
+      function OperationHistory() {
+        return (
+          <Card className="w-full py-10 px-8">
+            <Text as="h1" variant="heading" className="mb-4">
+              Operation History
+            </Text>
+
+            <ul className="flex flex-col gap-3">
+              <Text as="li" className="mb-2">
+                12 + 34 = 46
+              </Text>
+              <Text as="li" className="mb-2">
+                12 + 34 = 46
+              </Text>
+              <Text as="li" className="mb-2">
+                12 + 34 = 46
+              </Text>
+            </ul>
+          </Card>
+        );
+      }
+
       function App() {
         return (
-          <main className="py-28 px-4">
+          <main
+            className={`py-28 px-4 sm:px-10 flex flex-col sm:flex-row items-center sm:items-stretch gap-2`}
+          >
             <Calculator />
+            <OperationHistory />
           </main>
         );
       }
