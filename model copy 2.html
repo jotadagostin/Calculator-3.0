@@ -13,8 +13,25 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <script type="text/babel">
+      const CounterContext = React.createContext();
+
+      function CounterProvider({ children }) {
+        const [savedCounts, setSavedCounts] = React.useState([]);
+
+        function saveCount(count) {
+          setSavedCounts((prev) => [...prev, count]);
+        }
+
+        return (
+          <CounterContext.Provider value={{ savedCounts, saveCount }}>
+            {children}
+          </CounterContext.Provider>
+        );
+      }
+
       function Counter() {
         const [counter, setCounter] = React.useState(0);
+        const { savedCounts, saveCount } = React.useContext(CounterContext);
 
         if (counter > 20) {
           return <p>Maior que 20</p>;
@@ -22,7 +39,10 @@
 
         return (
           <div>
-            <p>Contador: {counter}</p>
+            <p>
+              Contador: {counter} - ultimo valor salvo:
+              {savedCounts[savedCounts.length - 1] || "-"}
+            </p>
 
             <p>{counter > 10 ? "maior que 10" : "Menor ou igual a 10"}</p>
             {counter > 15 && <p>Maior que 15</p>}
@@ -33,6 +53,22 @@
             <button onClick={() => setCounter((prevValue) => prevValue - 1)}>
               decrementar
             </button>
+            <button onClick={() => saveCount(counter)}>Salvar</button>
+          </div>
+        );
+      }
+
+      function CounterList() {
+        const { savedCounts } = React.useContext(CounterContext);
+
+        return (
+          <div>
+            <h2>Valores Salvos</h2>
+            <ul>
+              {savedCounts.map((value, index) => (
+                <li key={`item-${index}`}>{value}</li>
+              ))}
+            </ul>
           </div>
         );
       }
@@ -40,7 +76,11 @@
       function App() {
         return (
           <main>
-            <Counter />
+            <CounterProvider>
+              <Counter />
+              <hr />
+              <CounterList />
+            </CounterProvider>
           </main>
         );
       }
