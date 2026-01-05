@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik&display=swap"
+      rel="stylesheet"
+    />
+    <title>Fundamentos</title>
+  </head>
+  <style type="text/tailwindcss"></style>
+  <body
+    class="min-h-screen bg-linear-[180deg,_#807ECE_0%,_#8E7ECE_100%] text-(--text) font-(--font-sans)"
+  >
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      function ScrollTracker() {
+        const containerRef = React.useRef(null);
+        const [scrollInfo, setScrollInfo] = React.useState({
+          scrollTop: 0,
+          scrollHeight: 0,
+          clientHeight: 0,
+        });
+        const [scrollPercentage, setScrollPercentage] = React.useState(0);
+
+        function handleContainerScroll() {
+          if (!containerRef.current) {
+            return;
+          }
+
+          const { scrollTop, scrollHeight, clientHeight } =
+            containerRef.current;
+
+          setScrollInfo({ scrollTop, scrollHeight, clientHeight });
+
+          const maxScrollTop = scrollHeight - clientHeight;
+          const scrolledPercentage = Math.round(
+            (scrollTop / maxScrollTop) * 100
+          );
+          setScrollPercentage(scrolledPercentage);
+        }
+        return (
+          <div className="space-y-4">
+            <div
+              ref={containerRef}
+              onScroll={handleContainerScroll}
+              className="border border-solid border-blue-500 p-4 h-60 overflow-y-auto"
+            >
+              <div className="space-y-4">
+                {Array.from({ length: 20 }).map((_, i) => (
+                  <p key={i} className="p-2 bg-gray-200">
+                    Item do conteúdo {i + 1}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            <ul className="space-y-2 list-disc pl-5">
+              <li>Progresso do scroll: {scrollPercentage}</li>
+              <li>Onde esta o scroll (scrollTop): {scrollInfo.scrollTop}</li>
+              <li>
+                Tamanho do container (clientHeight): {scrollInfo.clientHeight}
+              </li>
+              <li>
+                Tamanho do scroll (scrollHeight): {scrollInfo.clientHeight}
+              </li>
+            </ul>
+          </div>
+        );
+      }
+
+      function InputFocus() {
+        const ref = React.useRef(null);
+
+        function handleClick() {
+          ref.current?.focus();
+        }
+
+        return (
+          <div className="space-x-2">
+            <input
+              ref={ref}
+              placeholder="Clique para focar"
+              className="p-2 border rounded"
+            />
+            <button onClick={handleClick} className="p-2 border">
+              Focar no input
+            </button>
+          </div>
+        );
+      }
+
+      const users = [
+        { id: 1, name: "Gustavo" },
+        { id: 2, name: "Ana" },
+        { id: 3, name: "João" },
+        { id: 4, name: "Maria" },
+        { id: 5, name: "Pedro" },
+      ];
+
+      function App() {
+        const [search, setSearch] = React.useState("");
+        const [count, setCount] = React.useState(0);
+
+        const filteredUsers = React.useMemo(() => {
+          return users.filter((user) =>
+            user.name.toLowerCase().includes(search.toLowerCase())
+          );
+        }, [search]);
+
+        return (
+          <main className="p-3 space-y-6">
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="buscar usuarios..."
+            />
+            <button className="border p-1" onClick={() => setCount(count + 1)}>
+              re-render: {count}
+            </button>
+
+            <ul>
+              {filteredUsers.map((user) => (
+                <li key={user.id}>{user.name}</li>
+              ))}
+            </ul>
+          </main>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
