@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik&display=swap"
+      rel="stylesheet"
+    />
+    <title>Fundamentos</title>
+  </head>
+  <style type="text/tailwindcss"></style>
+  <body>
+    <div id="root"></div>
+
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script type="text/babel">
+      function App() {
+        const [is12Hours, setIs12Hours] = React.useState(false);
+        const [time, setTime] = React.useState("");
+
+        const updateTime = React.useCallback(() => {
+          const now = new Date(Date.now());
+          const formattedTime = now.toLocaleTimeString("pt-BR", {
+            hour12: is12Hours,
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+          });
+
+          setTime(formattedTime);
+        }, [is12Hours]);
+
+        React.useEffect(() => {
+          updateTime();
+
+          const timer = setInterval(() => {
+            updateTime();
+          }, 1000);
+
+          return () => clearInterval(timer);
+        }, [updateTime]);
+
+        return (
+          <main className="p-3 space-y-6">
+            <div>{time}</div>
+            <button
+              onClick={() => setIs12Hours(!is12Hours)}
+              className="border p-2 "
+            >
+              Alterar formato para {is12Hours ? "12h" : "24h"}
+            </button>
+          </main>
+        );
+      }
+
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
+</html>
